@@ -1,17 +1,25 @@
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
+const DashboardPlugin = require("webpack-dashboard/plugin");
 
 module.exports = {
-    entry: path.join(__dirname, "src", "index.js"),
+    entry: path.join(__dirname, "src", "index.tsx"),
     output: { path: path.join(__dirname, "build"), filename: "index.bundle.js" },
     mode: process.env.NODE_ENV || "development",
-    resolve: { modules: [path.resolve(__dirname, "src"), "node_modules"] },
+    resolve: {
+        extensions: [".tsx", ".ts", ".js"]
+    },
     module: {
         rules: [
             {
                 test: /\.(js|jsx)$/,
                 exclude: /node_modules/,
                 use: ["babel-loader"],
+            },
+            {
+              test: /\.(ts|tsx)$/,
+                exclude: /node_modules/,
+                use: ["ts-loader"],
             },
             {
                 test: /\.(css|scss)$/,
@@ -27,6 +35,7 @@ module.exports = {
         new HtmlWebpackPlugin({
             template: path.join(__dirname, "public", "index.html"),
         }),
+        new DashboardPlugin()
     ],
     devServer: {
         host: 'localhost',
